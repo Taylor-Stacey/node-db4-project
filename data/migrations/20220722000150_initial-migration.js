@@ -12,13 +12,33 @@ exports.up = async function (knex) {
     })
     .createTable('steps', tbl => {
       tbl.increments('step_id');
-      // tbl.increments('step_number');
-      tbl.varchar('step_instructions', 100).notNullable();
-
+      tbl.varchar('step_text', 200).notNullable();
+      tbl.integer('step_number').notNullable();
+      tbl.integer('recipe_id')
+      .unsigned()
+      .notNullable()
+      .references('recipe_id')
+      .inTable('recipes')
+      .onDelete('RESTRICT')
+      .onUpdate('RESTRICT')
     })
     .createTable('step_ingredients', tbl => {
-      tbl.increments('quantity_id');
-      tbl.varchar('quantity', 10).unique();
+      tbl.increments('step_ingredient_id');
+      tbl.float('quantity').notNullable()
+      tbl.integer('step_id')
+      .unsigned()
+      .notNullable()
+      .references('step_id')
+      .inTable('steps')
+      .onDelete('RESTRICT')
+      .onUpdate('RESTRICT')
+      tbl.integer('ingredient_id')
+      .unsigned()
+      .notNullable()
+      .references('ingredient_id')
+      .inTable('ingredients')
+      .onDelete('RESTRICT')
+      .onUpdate('RESTRICT')
     })
 };
 
